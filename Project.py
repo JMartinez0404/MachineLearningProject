@@ -25,9 +25,9 @@ regr = linear_model.LinearRegression()
 model = regr.fit(X_train, y_train)
 predictions = regr.predict(X_test)
 
-single = [[3334201140, 117027503, 880166924, 175000000, 73, 7.5, 82]]
+single = [[678815482, 257698183, 2048709917, 321000000, 68, 8.5, 85]]
 singlepred = model.predict(single)
-print("X = 88, Predicted = %d" % (singlepred))
+print("Predicting Infinity War: score = ~91, Predicted = %d" % (singlepred))
 
 plt.scatter(y_test, predictions)
 plt.xlabel("True Values")
