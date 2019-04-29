@@ -8,6 +8,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import mean_absolute_error
 
 #df = pd.read_excel(r"C:\Users\Joel\Desktop\MovieData.xlsx")
 df = pd.read_excel(r"MovieData.xlsx")
@@ -23,10 +25,15 @@ regr = linear_model.LinearRegression()
 model = regr.fit(X_train, y_train)
 predictions = regr.predict(X_test)
 
+single = [[3334201140, 117027503, 880166924, 175000000, 73, 7.5, 82]]
+singlepred = model.predict(single)
+print("X = 88, Predicted = %d" % (singlepred))
+
 plt.scatter(y_test, predictions)
 plt.xlabel("True Values")
 plt.ylabel("Predictions")
-
+plt.show()
+print("Linear Regression Mean Absolute Error = ", mean_absolute_error(y_test, predictions, multioutput='raw_values'))
 
 # search for an optimal value of K for KNN
 k_range = list(range(1, 15))
@@ -35,19 +42,24 @@ for k in k_range:
     knn = KNeighborsClassifier(n_neighbors = k)
     scores = cross_val_score(knn, X, y, cv=3, scoring='accuracy')
     k_scores.append(scores.mean())
-print(k_scores)
+#print(k_scores)
 
 # plot the value of K for KNN (x-axis) versus the cross-validated accuracy (y-axis)
 plt.plot(k_range, k_scores)
 plt.xlabel('Value of K for KNN')
 plt.ylabel('Cross-Validated Accuracy')
+plt.show()
 # Most optimal is with a k = 6
 
 knn = KNeighborsClassifier(n_neighbors=6)
-print(cross_val_score(knn, X, y, cv=3, scoring='accuracy').mean())
+print("KNN Accuarcy = ", (cross_val_score(knn, X, y, cv=3, scoring='accuracy').mean()) * 1000, "%")
 
-from sklearn.linear_model import LogisticRegression
 logreg = LogisticRegression()
-print(cross_val_score(logreg, X, y, cv=3, scoring='accuracy').mean())
-# This shows that Knn would not be a good approach for this model but is more optimal than a logistic regression
+logmodel = logreg.fit(X_train, y_train)
+logpreds = logreg.predict(X_test)
 
+plt.scatter(y_test, logpreds)
+plt.xlabel("True Values")
+plt.ylabel("Logisitc Predictions")
+plt.show()
+print("Log Reg Accuarcy = ", (cross_val_score(logreg, X, y, cv=3, scoring='accuracy').mean()) * 1000, "%")
